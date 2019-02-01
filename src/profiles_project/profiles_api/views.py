@@ -70,6 +70,7 @@ class HelloApiView(APIView):
 class HelloViewSet(viewsets.ViewSet):
     """ Test API ViewSet. """
 
+    serializer_class = serializers.HelloSerializer
 
     def list(self, request):
         """ Return a hello message. """
@@ -81,3 +82,46 @@ class HelloViewSet(viewsets.ViewSet):
         ]
 
         return Response({'message ': 'Hello!', 'a_viewset ': a_viewset})
+
+    
+
+    def create(self, request):
+        """ Create a new hello message """
+
+        serializer = serializers.HelloSerializer(data=request.data) # Passes the data from the request to the serializer
+
+        if serializer.is_valid():
+            # if the serializer is valid
+            name = serializer.data.get('name') # Gets the name from the serializer data
+            message = 'Hello {}'.format(name)
+            return Response({ 'message': message })
+
+        else:
+            # if the serializer is not valid return STATUS 400 and the ERROR
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+    # Retrieve uses the primary key to find the object or objects in the database that we are searching for
+    def retrieve(self, request, pk=None):
+        """ Handles getting an object by its ID """
+
+        return Response({ 'http_method': 'GET' })
+
+
+    def update(self, request, pk=None):
+        """ Handles the updates of an object in the database by primary key index """
+
+        return Response({ 'http_method': 'PUT' })
+
+    
+    def partial_update(self, request, pk=None):
+        """ Handles the partial updates of an object in the database by primary key index """
+
+        return Response({ 'http_method': 'PATCH' })
+
+
+    def destroy(self, request, pk=None):
+        """ Handles the removal of an object in the database by primary key index """
+
+        return Response({ 'http_method': 'DELETE' })
