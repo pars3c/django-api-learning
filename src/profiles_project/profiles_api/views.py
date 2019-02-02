@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from . import serializers, models, permissions
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.authtoken.views import ObtainAuthToken
 
 from rest_framework import status, viewsets, filters
 
@@ -140,3 +142,15 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter, )
     # This will let us search by name and email with the following endpoint http://127.0.0.1:8000/api/profile/?search=roberto
     search_fields = ('name', 'email', )
+
+
+class LoginViewSet(viewsets.ViewSet):
+    """ Checks email and password and return an auth token """
+    
+    serializer_class = AuthTokenSerializer
+
+
+    def create(self, request):
+        """ Use the ObtainAuthToken APIView to validade and create a token. """
+
+        return ObtainAuthToken().post(request)
