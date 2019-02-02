@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from . import serializers, models, permissions
 
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, filters
 
 # Create your views here.
 
@@ -137,3 +137,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = models.UserProfile.objects.all()
     authentication_classes = (TokenAuthentication, )
     permission_classes = (permissions.UpdateOwnProfile, )
+    filter_backends = (filters.SearchFilter, )
+    # This will let us search by name and email with the following endpoint http://127.0.0.1:8000/api/profile/?search=roberto
+    search_fields = ('name', 'email', )
